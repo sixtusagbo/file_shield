@@ -4,7 +4,7 @@ import 'package:file_shield/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:window_size/window_size.dart';
 
-const String title = 'EasyRead File Shield';
+const String title = 'EasyRead-FileShield';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
