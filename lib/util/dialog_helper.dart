@@ -1,3 +1,4 @@
+import 'package:file_shield/main.dart';
 import 'package:flutter/material.dart';
 
 class DialogHelper {
@@ -19,8 +20,7 @@ class DialogHelper {
         return AlertDialog(
           title: Text(
             title ?? 'Operation failed',
-            style:
-                theme.textTheme.titleLarge?.copyWith(color: theme.primaryColor),
+            style: theme.textTheme.titleMedium?.copyWith(color: Colors.blue),
           ),
           content: content ??
               Text(
@@ -34,7 +34,7 @@ class DialogHelper {
                     style: TextButton.styleFrom(
                         textStyle: theme.textTheme.titleSmall
                             ?.copyWith(color: Colors.red)),
-                    child: const Text('Cancel'),
+                    child: const Text('Back'),
                   )
                 : const SizedBox(width: 2),
             TextButton(

@@ -16,12 +16,10 @@ class MyEncrypt {
   static Future<void> getNormalFile(Directory d, String filename) async {
     Uint8List encData = await _readData('${d.path}\\$filename');
     var plainData = await decryptData(encData);
-    String p = await writeData(plainData, '${d.path}\\decrypted_$filename');
-    logger.i("$p decrypted successfully");
+    await writeData(plainData, '${d.path}\\decrypted_$filename');
   }
 
   static encryptData(List<int> plainString) {
-    logger.i("Encrypting File...");
     final encrypted =
         MyEncrypt.myEncrypter.encryptBytes(plainString, iv: MyEncrypt.myIv);
 
@@ -29,7 +27,6 @@ class MyEncrypt {
   }
 
   static decryptData(Uint8List encData) {
-    logger.i("File decryption in progress...");
     enc.Encrypted en = enc.Encrypted(encData);
 
     return MyEncrypt.myEncrypter.decryptBytes(en, iv: MyEncrypt.myIv);
@@ -37,7 +34,6 @@ class MyEncrypt {
 
   /// Return file contents as bytes from an encrypted file
   static Future<Uint8List> _readData(String fileNameWithPath) async {
-    logger.i("Reading data...");
     File f = File(fileNameWithPath);
 
     return await f.readAsBytes();
@@ -46,7 +42,6 @@ class MyEncrypt {
   /// Write data bytes to a file
   static Future<String> writeData(
       List<int> dataToWrite, String fileNameWithPath) async {
-    logger.i("Writing Data...");
     File f = File(fileNameWithPath);
     await f.writeAsBytes(dataToWrite);
 
@@ -55,12 +50,13 @@ class MyEncrypt {
 
   static Future<Directory> get appDocDirectory async {
     final Directory docDir = await getApplicationDocumentsDirectory();
+    const String folderName = 'EasyRead-FileShield';
+    final Directory appDir = Directory('${docDir.path}\\$folderName');
 
-    if (await Directory('${docDir.path}\\EasyRead File Shield').exists()) {
-      return Directory('${docDir.path}\\EasyRead File Shield');
+    if (await appDir.exists()) {
+      return appDir;
     } else {
-      final appDocDir = await Directory('${docDir.path}\\EasyRead File Shield')
-          .create(recursive: true);
+      final appDocDir = await appDir.create(recursive: true);
       return appDocDir;
     }
   }
