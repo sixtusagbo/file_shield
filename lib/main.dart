@@ -23,20 +23,25 @@ void main() {
   runApp(const MyApp());
 }
 
+final darkNotifier = ValueNotifier<bool>(false);
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: title,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const HomeView(),
-      debugShowCheckedModeBanner: false,
-    );
+    return ValueListenableBuilder<bool>(
+        valueListenable: darkNotifier,
+        builder: (_, isDark, __) {
+          return MaterialApp(
+            title: title,
+            theme: ThemeData.light(useMaterial3: true),
+            darkTheme: ThemeData.dark(useMaterial3: true),
+            themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+            home: const HomeView(),
+            debugShowCheckedModeBanner: false,
+          );
+        });
   }
 }
 
@@ -51,12 +56,19 @@ class _HomeViewState extends State<HomeView> {
   String fileName = 'Pick';
   List<PlatformFile>? selectedFiles;
   bool showDecryptButton = false;
-  bool _darkMode = false;
+  final bool _darkMode = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void dispose() {
+    darkNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    bool isDark = darkNotifier.value;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -126,8 +138,11 @@ class _HomeViewState extends State<HomeView> {
             ListTile(
               title: const Text('Dark Mode'),
               trailing: Switch(
-                value: _darkMode,
-                onChanged: (v) => setState(() => _darkMode = v),
+                value: isDark,
+                onChanged: (v) {
+                  isDark = !isDark;
+                  darkNotifier.value = isDark;
+                },
               ),
             ),
           ],
