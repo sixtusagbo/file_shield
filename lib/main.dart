@@ -51,6 +51,7 @@ class _HomeViewState extends State<HomeView> {
   String fileName = 'Pick';
   List<PlatformFile>? selectedFiles;
   bool showDecryptButton = false;
+  bool _darkMode = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -62,6 +63,12 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         backgroundColor: theme.colorScheme.inversePrimary,
         title: Text('File Shield', style: theme.textTheme.headlineSmall),
+        actions: [
+          IconButton(
+            onPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
+            icon: const Icon(Icons.settings),
+          )
+        ],
       ),
       body: Center(
         child: Padding(
@@ -104,6 +111,26 @@ class _HomeViewState extends State<HomeView> {
               ),
             ],
           ),
+        ),
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Text(
+                'Settings',
+                style: theme.textTheme.titleMedium,
+              ),
+            ),
+            ListTile(
+              title: const Text('Dark Mode'),
+              trailing: Switch(
+                value: _darkMode,
+                onChanged: (v) => setState(() => _darkMode = v),
+              ),
+            ),
+          ],
         ),
       ),
     );
